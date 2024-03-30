@@ -11,19 +11,17 @@ from models import storage, Amenity, State, City, User, Review, \
 
 @app_views.route('/status', methods=['GET'])
 def status():
-    status = {'status': 'OK'}
-    return jsonify(status)
+    return jsonify({'status': 'OK'})
 
 
 @app_views.route('/stats', methods=['GET'])
 def get_stats():
-    stats = {
+
+    return jsonify({
         "amenities": storage.count(Amenity),
         "cities": storage.count(City),
         "states": storage.count(State),
         "users": storage.count(User),
         "reviews": storage.count(Review),
         "places": storage.count(Place)
-    }
-
-    return jsonify(stats)
+    })
