@@ -3,25 +3,25 @@
 Contains the class DBStorage
 """
 
-import models
+from os import getenv
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 from models.amenity import Amenity
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from os import getenv
-import sqlalchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -74,3 +74,41 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """
+        Retrieves an object from the database by its class and id
+        Args:
+            cls: the class of the object
+            id: the id of the object to retrieve
+        Returns:
+            The found object otherwise None
+ 1       """
+
+        result = self.__session.query(cls).filter_by(id=id).first()
+
+        if result:
+            return result
+
+        return None
+
+    def count(self, cls=None):
+        """
+        Retrieves the number of objects in the storage based on the class
+        or otherwise
+        Args:
+            cls: the class of the object to count
+
+        Returns:
+            The number of objects in the storage based on the class or otherwise
+        """
+
+        if cls is None:
+            size = len(self.all())
+        else:
+            size = len(self.all(cls))
+
+        return size
+
+
+

@@ -3,18 +3,21 @@
 Contains the TestStateDocs classes
 """
 
-from datetime import datetime
 import inspect
+import unittest
+
+import pep8
+
 import models
 from models import state
 from models.base_model import BaseModel
-import pep8
-import unittest
+
 State = state.State
 
 
 class TestStateDocs(unittest.TestCase):
     """Tests to check the documentation and style of State class"""
+
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
@@ -59,6 +62,7 @@ class TestStateDocs(unittest.TestCase):
 
 class TestState(unittest.TestCase):
     """Test the State class"""
+
     def test_is_subclass(self):
         """Test that State is a subclass of BaseModel"""
         state = State()
