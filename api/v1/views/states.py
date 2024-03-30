@@ -2,9 +2,10 @@
 """
 The api states module
 """
+from flask import jsonify, abort, request
+
 from api.v1.views import app_views, storage
 from models import State
-from flask import jsonify, abort, request
 
 
 @app_views.route('/states', methods=['GET'])

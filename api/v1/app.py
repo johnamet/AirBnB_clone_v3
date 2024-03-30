@@ -4,7 +4,8 @@ The Script creates contains the flask blueprint
 """
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
+
 from api.v1.views import app_views
 from models import storage
 

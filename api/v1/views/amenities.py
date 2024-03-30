@@ -2,9 +2,10 @@
 """
 The api amenities module
 """
+from flask import jsonify, abort, request
+
 from api.v1.views import app_views, storage
 from models import Amenity
-from flask import jsonify, abort, request
 
 
 @app_views.route('/amenities', methods=['GET'])
@@ -53,12 +54,12 @@ def create_amenity():
     if "name" not in request_data:
         abort(400, "Missing name")
 
-    state = Amenity(name=request_data["name"])
-    state.save()
+    amenity = Amenity(name=request_data["name"])
+    amenity.save()
 
-    state_dict = state.to_dict()
+    amenity_dict = amenity.to_dict()
 
-    return jsonify(state_dict), 201
+    return jsonify(amenity_dict), 201
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'])

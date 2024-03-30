@@ -3,8 +3,9 @@
 Index Views
 """
 
-from api.v1.views import app_views
 from flask import jsonify
+
+from api.v1.views import app_views
 from models import storage, Amenity, State, City, User, Review, \
     Place
 

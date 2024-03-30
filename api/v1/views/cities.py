@@ -4,6 +4,7 @@ Cities API
 """
 
 from flask import jsonify, request, abort
+
 from api.v1.views import app_views, storage
 from models import State, City
 
@@ -129,4 +130,4 @@ def update_city(city_id):
     new_city = City(**city_dict)
     new_city.save()
 
-    return jsonify(city_dict), 201
+    return jsonify(new_city.to_dict()), 201
