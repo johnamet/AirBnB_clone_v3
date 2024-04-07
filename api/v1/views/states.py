@@ -13,79 +13,60 @@ from models import State
 @app_views.route('/states/<state_id>', methods=['GET'])
 def get_states(state_id=None):
     """
-    Retrieve all states
+    Retrieve all states or a specific state by id
     """
     if state_id:
-        states = storage.get(cls=State, id=state_id)
-        if not states:
+        state = storage.get(State, state_id)
+        if not state:
             abort(404)
-        else:
-            states = states.to_dict()
+        return jsonify(state.to_dict()), 200
     else:
-        states = storage.all(State)
-        states = [value.to_dict() for _, value in states.items()]
-    return jsonify(states)
+        states = storage.all(State).values()
+        return jsonify([state.to_dict() for state in states]), 200
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
-def delete_states(state_id=None):
+def delete_state(state_id=None):
     """
-    Delete state linked to state_id
+    Delete state by id
     """
-    if state_id:
-        state = storage.get(cls=State, id=state_id)
-        if state:
-            storage.delete(obj=state)
-            storage.save()
-        else:
-            abort(404)
-
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+    storage.delete(state)
+    storage.save()
     return jsonify({}), 200
 
 
 @app_views.route('/states', methods=['POST'])
 @app_views.route('/states/', methods=['POST'])
 def create_state():
+    """
+    Create a new state
+    """
     request_data = request.get_json()
-
     if not request_data:
         abort(400, "Not a JSON")
-
     if "name" not in request_data:
         abort(400, "Missing name")
-
-    state = State(name=request_data["name"])
-    state.save()
-
-    state_dict = state.to_dict()
-
-    return jsonify(state_dict), 201
+    new_state = State(**request_data)
+    new_state.save()
+    return jsonify(new_state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def update_state(state_id):
-    request_data = request.get_json()
-
-    if not request_data:
-        abort(400, "Not a JSON")
-
-    state = storage.get(cls=State, id=state_id)
+    """
+    Update state by id
+    """
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
-    else:
-        state_dict = state.to_dict()
-        for key, value in request_data.items():
-            state_dict[key] = value
-
-        # delete old state
-        storage.delete(obj=state)
-
-        # Create a new state with new dict
-        state = State(**state_dict)
-
-        # Save new state
-        state.save()
-
-        state_dict = state.to_dict()
-
-    return jsonify(state_dict), 200
+    request_data = request.get_json()
+    if not request_data:
+        abort(400, "Not a JSON")
+    for key, value in request_data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(state, key, value)
+    state.save()
+    return jsonify(state.to_dict()), 200
