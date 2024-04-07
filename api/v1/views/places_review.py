@@ -3,8 +3,8 @@
 Places Review api endpoints
 """
 
-from flask import jsonify, request, abort
 
+from flask import jsonify, request, abort
 from api.v1.views import app_views, storage, Place, User, Review
 
 

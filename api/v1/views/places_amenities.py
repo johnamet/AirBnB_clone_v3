@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 
 from flask import jsonify, abort
-
-from api.v1.views import app_views, storage
 from models import Place, Amenity, storage_t
+from api.v1.views import app_views, storage
 
 
 @app_views.route('/places/<place_id>/amenities', methods=['GET'])

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Testing file
 """
+import json
 import requests
 
 if __name__ == "__main__":
