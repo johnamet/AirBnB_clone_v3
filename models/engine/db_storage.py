@@ -49,10 +49,15 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-        return (new_dict)
+        return new_dict
 
     def new(self, obj):
         """add the object to the current database session"""
+        if "password" in obj:
+            import hashlib
+            m = hashlib.md5()
+            m.update(obj["password"])
+            obj["password"] = m.hexdigest()
         self.__session.add(obj)
 
     def save(self):
@@ -109,6 +114,3 @@ class DBStorage:
             size = len(self.all(cls))
 
         return size
-
-
-

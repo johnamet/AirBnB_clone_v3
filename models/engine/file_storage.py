@@ -37,8 +37,13 @@ class FileStorage:
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""
+        import hashlib
         if obj is not None:
             key = obj.__class__.__name__ + "." + obj.id
+            if "password" in obj:
+                m = hashlib.md5()
+                m.update(obj.password)
+                obj["password"] = m.hexdigest()
             self.__objects[key] = obj
 
     def save(self):
@@ -103,4 +108,3 @@ class FileStorage:
             return len(self.all(cls))
         else:
             return len(self.all())
-

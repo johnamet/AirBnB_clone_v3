@@ -5,6 +5,7 @@ The Script creates contains the flask blueprint
 import os
 
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 from api.v1.views import app_views
 from models import storage
@@ -14,16 +15,22 @@ app.register_blueprint(app_views)
 
 app.url_map.strict_slashes = False
 
-print(app.url_map)
+cors = CORS(app, resources={r"/api/*": {"origins": "0.0.0.0"}})
 
 
 @app.teardown_appcontext
 def close_connection(exception):
+    """
+    Close the connection to the storage
+    """
     storage.close()
 
 
 @app.errorhandler(404)
 def page_not_found(exception):
+    """
+    The default 404 error handler
+    """
     return jsonify({'error': 'Not found'}), 404
 
 
