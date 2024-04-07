@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 """
 Cities API
 """
@@ -16,12 +16,13 @@ def get_cities_by_state(state_id):
     """
     if not state_id:
         abort(404)
-    else:
-        state = storage.get(State, state_id)
-        if not state:
-            abort(404)
-        cities = state.cities
-        cities = [city.to_dict() for city in cities]
+
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+
+    cities = state.cities
+    cities = [city.to_dict() for city in cities]
 
     return jsonify(cities)
 
@@ -119,15 +120,12 @@ def update_city(city_id):
     if "name" not in request_data:
         abort(400, "Missing name")
 
-    city_dict = city.to_dict()
+    for key in ['id', 'state_id', 'created_at', 'updated_at']:
+        request_data.pop(key, None)
 
     for key, value in request_data.items():
-        city_dict[key] = value
+        setattr(city, key, value)
 
-    # delete the old city
-    storage.delete(city)
+    city.save()
 
-    new_city = City(**city_dict)
-    new_city.save()
-
-    return jsonify(new_city.to_dict()), 201
+    return jsonify(city.to_dict()), 200

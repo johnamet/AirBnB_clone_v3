@@ -89,8 +89,7 @@ def create_user():
     if "password" not in request_json:
         abort(400, "Missing password")
 
-    user_dict = {key: value for key, value in request_json.items()}
-    user = User(**user_dict)
+    user = User(**request_json)
     user.save()
 
     return jsonify(user.to_dict()), 201
@@ -121,15 +120,13 @@ def update_user(user_id):
     user_dict = user.to_dict()
 
     for key, value in request.json.items():
-        if key not in "created_at" \
-                or key not in "updated_at" \
-                or key not in "id" \
-                or key not in "email":
+        if key not in ["id", "email", "created_at", "updated_at"]:
             user_dict[key] = value
 
-    # delete old user
-    storage.delete(user)
-    new_user = User(**user_dict)
-    new_user.save()
+    # update user attributes
+    for key, value in user_dict.items():
+        setattr(user, key, value)
 
-    return jsonify(new_user.to_dict()), 200
+    user.save()
+
+    return jsonify(user.to_dict()), 200
