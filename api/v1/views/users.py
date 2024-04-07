@@ -42,8 +42,8 @@ def get_user(user_id):
 
     user_dict = user.to_dict()
 
-    del user_dict['password']
-    return jsonify(user.to_dict())
+    user_dict.pop('password', None)
+    return jsonify(user_dict)
 
 
 @app_views.route('/users/<user_id>', methods=["DELETE"])
