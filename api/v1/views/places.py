@@ -122,11 +122,11 @@ def update_place(place_id):
     place_dict = place.to_dict()
 
     for key, value in request_data.items():
-        if key is not "id" or \
-                key is not "user_id" or \
-                key is not "city_id" or \
-                key is not "created_at" or \
-                key is not "updated_at":
+        if key != "id" or \
+                key != "user_id" or \
+                key != "city_id" or \
+                key != "created_at" or \
+                key != "updated_at":
             place_dict[key] = value
 
     storage.delete(place)
