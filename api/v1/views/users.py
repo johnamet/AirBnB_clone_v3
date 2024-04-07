@@ -16,7 +16,12 @@ def get_users():
     Get all users
     """
     users = storage.all(User)
-    users_dict = [user.to_dict() for _, user in users.items()]
+    users_dict = []
+
+    for _, user in users.items():
+        user_dict = user.to_dict()
+        user_dict.pop('password', None)
+        users_dict.append(user_dict)
 
     return jsonify(users_dict)
 
