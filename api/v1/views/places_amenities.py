@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+Places Amenities api endpoints
+"""
+
 
 from flask import jsonify, abort
 from models import Place, Amenity, storage_t

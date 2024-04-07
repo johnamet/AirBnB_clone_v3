@@ -40,6 +40,9 @@ def get_user(user_id):
     if not user:
         abort(404)
 
+    user_dict = user.to_dict()
+
+    del user_dict['password']
     return jsonify(user.to_dict())
 
 
